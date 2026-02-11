@@ -95,23 +95,30 @@ function addWord() {
     const input = document.getElementById('newWord');
     const word = input.value.trim().toUpperCase();
 
+    if (!word) {
+        alert('Word cannot be empty'); // prevent empty submission
+        return;
+    }
+
     wordBank.push(word);
     input.value = '';
     saveWordBank();
     displayWordBank();
 }
 
+
 function editWord(index) {
     const newWord = prompt('Edit word:', wordBank[index]);
     if (newWord) {
-        wordBank.splice(index, 1);
+        wordBank[index] = newWord.trim().toUpperCase(); // ✅ update word instead of deleting
         saveWordBank();
         displayWordBank();
     }
 }
-
 function deleteWord(index) {
     if (confirm('Are you sure you want to delete this word?')) {
+        // Remove the word from the array
+        wordBank.splice(index, 1);
         saveWordBank();
         displayWordBank();
     }
@@ -135,17 +142,24 @@ function generateKeyboard() {
 function startGame() {
     const p1Name = document.getElementById('player1Name').value.trim();
     const p2Name = document.getElementById('player2Name').value.trim();
-    
-    gameState.player1.name = p1Name || 'Player 1';
-    gameState.player2.name = p2Name || 'Player 2';
-    
+
+    // Validate player names
+    if (!p1Name || !p2Name) {
+        alert('Both player names are required to start the game!');
+        return; // Stop game start
+    }
+
+    gameState.player1.name = p1Name;
+    gameState.player2.name = p2Name;
+
     document.getElementById('player1Display').textContent = gameState.player1.name;
     document.getElementById('player2Display').textContent = gameState.player2.name;
-    
+
     document.getElementById('gameArea').style.display = 'block';
-    
+
     nextRound();
 }
+
 
 function nextRound() {
     if (wordBank.length === 0) {
@@ -178,6 +192,9 @@ function guessLetter(letter) {
     }
     
     gameState.guessedLetters.push(letter);
+
+    
+    document.getElementById('key-' + letter).disabled = true;
     
     if (!gameState.currentWord.includes(letter)) {
         gameState.wrongGuesses++;
@@ -189,6 +206,7 @@ function guessLetter(letter) {
     updateLives();
     checkGameStatus();
 }
+
 
 function updateWordDisplay() {
     const display = document.getElementById('wordDisplay');
@@ -214,14 +232,16 @@ function updateWrongLetters() {
     if (wrong.length === 0) {
         wrongLettersDiv.textContent = 'None yet';
     } else {
-        wrongLettersDiv.textContent = gameState.guessedLetters.join(', ');
+        wrongLettersDiv.textContent = wrong.join(', ');
     }
 }
 
+
 function updateLives() {
-    const livesLeft = gameState.maxWrong - gameState.wrongGuesses + 1;
+    const livesLeft = gameState.maxWrong - gameState.wrongGuesses;
     document.getElementById('livesLeft').textContent = livesLeft;
 }
+
 
 function updateHangman() {
     const parts = ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'];
