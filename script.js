@@ -181,8 +181,10 @@ function guessLetter(letter) {
     if (!gameState.gameActive) return;
     
     if (gameState.guessedLetters.includes(letter)) {
+        alert("You already guessed that letter!");
         return;
     }
+    
     
     gameState.guessedLetters.push(letter);
     
