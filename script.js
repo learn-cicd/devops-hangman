@@ -92,15 +92,35 @@ function displayWordBank() {
     });
 }
 
+function isValidWord(word) {
+    return /^[A-Z]+$/.test(word);
+}
+
 function addWord() {
     const input = document.getElementById('newWord');
     const word = input.value.trim().toUpperCase();
+
+    if (!word) {
+        alert('Word cannot be empty.');
+        return;
+    }
+
+    if (!isValidWord(word)) {
+        alert('Only letters A-Z allowed.');
+        return;
+    }
+
+    if (wordBank.includes(word)) {
+        alert('Duplicate word not allowed.');
+        return;
+    }
 
     wordBank.push(word);
     input.value = '';
     saveWordBank();
     displayWordBank();
 }
+
 
 function editWord(index) {
     const newWord = prompt('Edit word:', wordBank[index]);
