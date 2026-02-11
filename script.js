@@ -58,7 +58,7 @@ function loadWordBank() {
 }
 
 function saveWordBank() {
-    localStorage.setItem('devopsWords', JSON.stringify(wordBank));
+    localStorage.setItem('wordBank', JSON.stringify(wordBank));
 }
 
 function displayWordBank() {
