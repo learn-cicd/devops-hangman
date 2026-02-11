@@ -102,12 +102,18 @@ function addWord() {
 }
 
 function editWord(index) {
-    const newWord = prompt('Edit word:', wordBank[index]);
-    if (newWord) {
-        wordBank.splice(index, 1);
-        saveWordBank();
-        displayWordBank();
-    }
+  const newWord = prompt("Edit word:", wordBank[index]);
+  if (newWord === null) return; // user cancelled
+
+  const result = validateWord(newWord, index);
+  if (!result.ok) {
+    alert(result.msg);
+    return;
+  }
+
+  wordBank[index] = result.word;
+  saveWordBank();
+  displayWordBank();
 }
 
 function deleteWord(index) {
@@ -316,3 +322,19 @@ function gameLost() {
     
     gameState.currentPlayer = gameState.currentPlayer === 1 ? 2 : 1;
 }
+
+
+function validateWord(rawWord, editingIndex = null) {
+    const word = (rawWord || "").trim().toUpperCase();
+  
+    if (!word) return { ok: false, msg: "Word cannot be empty." };
+    if (!/^[A-Z]+$/.test(word)) return { ok: false, msg: "Only letters A–Z allowed." };
+  
+    const duplicateIndex = wordBank.indexOf(word);
+    if (duplicateIndex !== -1 && duplicateIndex !== editingIndex) {
+      return { ok: false, msg: "Duplicate word not allowed." };
+    }
+  
+    return { ok: true, word };
+  }
+  
