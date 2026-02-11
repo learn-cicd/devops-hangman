@@ -95,11 +95,30 @@ function addWord() {
     const input = document.getElementById('newWord');
     const word = input.value.trim().toUpperCase();
 
+    // Empty check
+    if (word === '') {
+        alert('Word cannot be empty.');
+        return;
+    }
+
+    // Letters only (A–Z)
+    if (!/^[A-Z]+$/.test(word)) {
+        alert('Only uppercase letters (A–Z) are allowed.');
+        return;
+    }
+
+    // Duplicate check
+    if (wordBank.includes(word)) {
+        alert('Duplicate words are not allowed.');
+        return;
+    }
+
     wordBank.push(word);
     input.value = '';
     saveWordBank();
     displayWordBank();
 }
+
 
 function editWord(index) {
     const newWord = prompt('Edit word:', wordBank[index]);
@@ -135,17 +154,28 @@ function generateKeyboard() {
 function startGame() {
     const p1Name = document.getElementById('player1Name').value.trim();
     const p2Name = document.getElementById('player2Name').value.trim();
-    
-    gameState.player1.name = p1Name || 'Player 1';
-    gameState.player2.name = p2Name || 'Player 2';
-    
+
+    if (p1Name === '' || p2Name === '') {
+        alert('Both player names are required.');
+        return;
+    }
+
+    if (p1Name === p2Name) {
+        alert('Player names must be different.');
+        return;
+    }
+
+    gameState.player1.name = p1Name;
+    gameState.player2.name = p2Name;
+
     document.getElementById('player1Display').textContent = gameState.player1.name;
     document.getElementById('player2Display').textContent = gameState.player2.name;
-    
+
     document.getElementById('gameArea').style.display = 'block';
-    
+
     nextRound();
 }
+
 
 function nextRound() {
     if (wordBank.length === 0) {
@@ -172,23 +202,27 @@ function nextRound() {
 
 function guessLetter(letter) {
     if (!gameState.gameActive) return;
-    
+
     if (gameState.guessedLetters.includes(letter)) {
         return;
     }
-    
+
     gameState.guessedLetters.push(letter);
-    
+
+    // Disable button after first click
+    document.getElementById('key-' + letter).disabled = true;
+
     if (!gameState.currentWord.includes(letter)) {
         gameState.wrongGuesses++;
         updateHangman();
     }
-    
+
     updateWordDisplay();
     updateWrongLetters();
     updateLives();
     checkGameStatus();
 }
+
 
 function updateWordDisplay() {
     const display = document.getElementById('wordDisplay');
@@ -255,15 +289,17 @@ function resetKeyboard() {
 function updateCurrentPlayer() {
     const player1Div = document.getElementById('player1Score');
     const player2Div = document.getElementById('player2Score');
-    
+
+    player1Div.classList.remove('active');
+    player2Div.classList.remove('active');
+
     if (gameState.currentPlayer === 1) {
         player1Div.classList.add('active');
-        player2Div.classList.remove('active');
     } else {
-        player1Div.classList.remove('active');
         player2Div.classList.add('active');
     }
 }
+
 
 function checkGameStatus() {
     const allLettersGuessed = [...gameState.currentWord].every(letter =>
