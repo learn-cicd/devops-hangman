@@ -123,12 +123,7 @@ function editWord(index) {
 }
 
 function deleteWord(index) {
-<<<<<<< HEAD
-    if (!confirm('Are you sure you want to delete this word?'))
-     return;
-=======
     if (!confirm('Are you sure you want to delete this word?')) return;
->>>>>>> 06ff603dfc4f6e4199094c2316b7daa1d6cd032f
 
     wordBank.splice(index, 1);
     saveWordBank();
