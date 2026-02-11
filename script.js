@@ -103,23 +103,11 @@ function addWord() {
 
 function editWord(index) {
     const newWord = prompt('Edit word:', wordBank[index]);
-    if (!newWord) return;
-
-    const clean = newWord.trim().toUpperCase();
-
-    if (!isValidWord(clean)) {
-        alert('Only uppercase letters A-Z allowed.');
-        return;
+    if (newWord) {
+        wordBank.splice(index, 1);
+        saveWordBank();
+        displayWordBank();
     }
-
-    if (wordBank.includes(clean) && wordBank[index] !== clean) {
-        alert('Duplicate word not allowed.');
-        return;
-    }
-
-    wordBank[index] = clean;
-    saveWordBank();
-    displayWordBank();
 }
 
 function deleteWord(index) {
@@ -129,6 +117,7 @@ function deleteWord(index) {
     saveWordBank();
     displayWordBank();
 }
+
 
 function generateKeyboard() {
     const keyboard = document.getElementById('keyboard');
