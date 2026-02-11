@@ -339,3 +339,13 @@ function gameLost() {
     
     gameState.currentPlayer = gameState.currentPlayer === 1 ? 2 : 1;
 }
+function toggleGuessedLetters() {
+    const checkbox = document.getElementById('toggleGuessedLetters');
+    const wrongLettersDiv = document.getElementById('wrongLetters');
+
+    if (checkbox.checked) {
+        wrongLettersDiv.style.display = 'block';
+    } else {
+        wrongLettersDiv.style.display = 'none';
+    }
+}
