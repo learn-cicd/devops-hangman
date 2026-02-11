@@ -92,14 +92,19 @@ function displayWordBank() {
 }
 
 function addWord() {
-    const input = document.getElementById('newWord');
-    const word = input.value.trim().toUpperCase();
-
-    wordBank.push(word);
-    input.value = '';
+    const input = document.getElementById("newWord");
+    const result = validateWord(input.value);
+  
+    if (!result.ok) {
+      alert(result.msg);
+      return;
+    }
+  
+    wordBank.push(result.word);
+    input.value = "";
     saveWordBank();
     displayWordBank();
-}
+  }
 
 function editWord(index) {
   const newWord = prompt("Edit word:", wordBank[index]);
