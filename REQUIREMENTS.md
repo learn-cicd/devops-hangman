@@ -16,8 +16,8 @@ This document defines the expected behavior of the DevOps Hangman application. U
 **REQ-WB-02: Add Word**
 - Users MUST be able to add new words to the word bank
 - Words MUST only contain uppercase letters (A-Z)
-- Empty words MUST NOT be allowed
-- Duplicate words MUST NOT be allowed
+- Empty words MUST NOT be allowed                                                          //check
+- Duplicate words MUST NOT be allowed                                                      //check
 - Numbers and special characters MUST NOT be allowed
 
 **REQ-WB-03: Edit Word**
@@ -28,7 +28,7 @@ This document defines the expected behavior of the DevOps Hangman application. U
 **REQ-WB-04: Delete Word**
 - Users MUST be able to delete words from the word bank
 - The correct word (the one clicked) MUST be removed
-- User MUST be prompted for confirmation before deletion
+- User MUST be prompted for confirmation before deletion                                    //check
 
 **REQ-WB-05: Persistence**
 - All word bank changes MUST persist after page refresh
@@ -37,7 +37,7 @@ This document defines the expected behavior of the DevOps Hangman application. U
 
 **REQ-WB-06: Word Count**
 - The word bank MUST display the total number of words
-- The count MUST update when words are added, edited, or deleted
+- The count MUST update when words are added, edited, or deleted                           //check
 
 ---
 
@@ -46,7 +46,7 @@ This document defines the expected behavior of the DevOps Hangman application. U
 **REQ-PS-01: Player Names**
 - The application MUST require two player names
 - Player names MUST NOT be empty
-- Player 1 and Player 2 MUST have different names
+- Player 1 and Player 2 MUST have different names                                        //check
 - Player names MUST be displayed during gameplay
 
 **REQ-PS-02: Start Game**

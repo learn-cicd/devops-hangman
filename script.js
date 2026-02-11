@@ -135,6 +135,14 @@ function generateKeyboard() {
 function startGame() {
     const p1Name = document.getElementById('player1Name').value.trim();
     const p2Name = document.getElementById('player2Name').value.trim();
+
+    //new
+
+    // 3. Check if names are the same (ignoring capital letters)
+    if (p1Name.toLowerCase() == p2Name.toLowerCase()) {
+        alert("Players cannot have the same name. Please choose different names!");
+        return; 
+    }
     
     gameState.player1.name = p1Name || 'Player 1';
     gameState.player2.name = p2Name || 'Player 2';
