@@ -109,10 +109,10 @@ function editWord(index) {
         displayWordBank();
     }
 }
-
-
 function deleteWord(index) {
     if (confirm('Are you sure you want to delete this word?')) {
+        // Remove the word from the array
+        wordBank.splice(index, 1);
         saveWordBank();
         displayWordBank();
     }
