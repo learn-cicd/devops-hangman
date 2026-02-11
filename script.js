@@ -103,16 +103,32 @@ function addWord() {
 
 function editWord(index) {
     const newWord = prompt('Edit word:', wordBank[index]);
-    if (newWord) {
-        wordBank.splice(index, 1);
-        saveWordBank();
-        displayWordBank();
+    if (!newWord) return;
+
+    const clean = newWord.trim().toUpperCase();
+
+    if (!isValidWord(clean)) {
+        alert('Only uppercase letters A-Z allowed.');
+        return;
     }
+
+    if (wordBank.includes(clean) && wordBank[index] !== clean) {
+        alert('Duplicate word not allowed.');
+        return;
+    }
+
+    wordBank[index] = clean;
+    saveWordBank();
+    displayWordBank();
 }
 
 function deleteWord(index) {
+<<<<<<< HEAD
     if (!confirm('Are you sure you want to delete this word?'))
      return;
+=======
+    if (!confirm('Are you sure you want to delete this word?')) return;
+>>>>>>> 06ff603dfc4f6e4199094c2316b7daa1d6cd032f
 
     wordBank.splice(index, 1);
     saveWordBank();
