@@ -285,15 +285,17 @@ function resetKeyboard() {
 function updateCurrentPlayer() {
     const player1Div = document.getElementById('player1Score');
     const player2Div = document.getElementById('player2Score');
-    
+
+    player1Div.classList.remove('active');
+    player2Div.classList.remove('active');
+
     if (gameState.currentPlayer === 1) {
         player1Div.classList.add('active');
-        player2Div.classList.remove('active');
     } else {
-        player1Div.classList.remove('active');
         player2Div.classList.add('active');
     }
 }
+
 
 function checkGameStatus() {
     const allLettersGuessed = [...gameState.currentWord].every(letter =>
