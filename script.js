@@ -95,11 +95,22 @@ function addWord() {
     const input = document.getElementById('newWord');
     const word = input.value.trim().toUpperCase();
 
+    if (!word) {
+        alert("Please enter a valid word.");
+        return;
+    }
+
+    if (wordBank.includes(word)) {
+        alert("This word already exists in the word bank.");
+        return;
+    }
+
     wordBank.push(word);
     input.value = '';
     saveWordBank();
     displayWordBank();
 }
+
 
 function editWord(index) {
     const newWord = prompt('Edit word:', wordBank[index]);
