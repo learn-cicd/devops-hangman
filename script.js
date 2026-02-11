@@ -100,11 +100,6 @@ function addWord() {
         return;
     }
 
-    if (wordBank.includes(word)) {
-        alert('Word already exists in the Word Bank'); // prevent duplicates
-        return;
-    }
-
     wordBank.push(word);
     input.value = '';
     saveWordBank();
