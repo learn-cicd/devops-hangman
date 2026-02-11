@@ -1,3 +1,4 @@
+
 const defaultWords = [
     'DEVOPS', 'AGILE', 'VERSION', 'BRANCH', 'GITHUB', 
     'CHANGES', 'FEATURES', 'HOTFIX', 'CONTINUOUS', 'INTEGRATION',
@@ -91,9 +92,28 @@ function displayWordBank() {
     });
 }
 
+function isValidWord(word) {
+    return /^[A-Z]+$/.test(word);
+}
+
 function addWord() {
     const input = document.getElementById('newWord');
     const word = input.value.trim().toUpperCase();
+
+    if (!word) {
+        alert('Word cannot be empty.');
+        return;
+    }
+
+    if (!isValidWord(word)) {
+        alert('Only letters A-Z allowed.');
+        return;
+    }
+
+    if (wordBank.includes(word)) {
+        alert('Duplicate word not allowed.');
+        return;
+    }
 
     wordBank.push(word);
     input.value = '';
@@ -101,14 +121,28 @@ function addWord() {
     displayWordBank();
 }
 
+
 function editWord(index) {
     const newWord = prompt('Edit word:', wordBank[index]);
-    if (newWord) {
-        wordBank.splice(index, 1);
-        saveWordBank();
-        displayWordBank();
+    if (!newWord) return;
+
+    const clean = newWord.trim().toUpperCase();
+
+    if (!isValidWord(clean)) {
+        alert('Only uppercase letters A-Z allowed.');
+        return;
     }
+
+    if (wordBank.includes(clean) && wordBank[index] !== clean) {
+        alert('Duplicate word not allowed.');
+        return;
+    }
+
+    wordBank[index] = clean;
+    saveWordBank();
+    displayWordBank();
 }
+
 
 function deleteWord(index) {
     if (confirm('Are you sure you want to delete this word?')) {
@@ -135,6 +169,11 @@ function generateKeyboard() {
 function startGame() {
     const p1Name = document.getElementById('player1Name').value.trim();
     const p2Name = document.getElementById('player2Name').value.trim();
+
+      if (p1Name === '' || p2Name === '') {
+        alert("Both player names are required.");
+        return;
+    }
     
     gameState.player1.name = p1Name || 'Player 1';
     gameState.player2.name = p2Name || 'Player 2';
