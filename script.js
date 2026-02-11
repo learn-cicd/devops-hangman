@@ -178,6 +178,9 @@ function guessLetter(letter) {
     }
     
     gameState.guessedLetters.push(letter);
+
+    
+    document.getElementById('key-' + letter).disabled = true;
     
     if (!gameState.currentWord.includes(letter)) {
         gameState.wrongGuesses++;
@@ -189,6 +192,7 @@ function guessLetter(letter) {
     updateLives();
     checkGameStatus();
 }
+
 
 function updateWordDisplay() {
     const display = document.getElementById('wordDisplay');
