@@ -19,6 +19,23 @@ let gameState = {
 
 let wordBank = [];
 
+// Centralized word validation to enforce REQ-WB-01 everywhere
+function validateWordInput(rawWord) {
+    const word = rawWord.trim().toUpperCase();
+
+    if (word === '') {
+        alert('Word cannot be empty.');
+        return null;
+    }
+    
+    if (!/^[A-Z]+$/.test(word)) {
+        alert('Word must contain only uppercase letters (A-Z). Numbers and special characters are not allowed.');
+        return null;
+    }
+
+    return word;
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     loadWordBank();
     generateKeyboard();
@@ -35,6 +52,12 @@ function toggleTheme() {
 }
 
 function switchTab(tabName) {
+    // Prevent word bank access during active gameplay (REQ-UI-03)
+    if (tabName === 'wordbank' && gameState.gameActive) {
+        alert('Cannot access Word Bank during active gameplay! Finish the current round first.');
+        return;
+    }
+    
     const tabs = document.querySelectorAll('.tab-content');
     tabs.forEach(tab => tab.classList.remove('active'));
     
@@ -93,29 +116,80 @@ function displayWordBank() {
 
 function addWord() {
     const input = document.getElementById('newWord');
-    const word = input.value.trim().toUpperCase();
+    const rawWord = input.value.trim();
+    const word = rawWord.toUpperCase();
 
+    // Validation
+
+
+    if (wordBank.includes(word)) {
+        alert('This word already exists in the word bank!');
+        return;
+    }
+
+
+    // Validation
+    if (word === '') {
+        alert('Word cannot be empty!');
+        return;
+    }
+
+    //  Add valid word
     wordBank.push(word);
     input.value = '';
     saveWordBank();
     displayWordBank();
 }
 
+
 function editWord(index) {
-    const newWord = prompt('Edit word:', wordBank[index]);
+    //added fix for edit word
+    const currentWord = wordBank[index];
+    const newWord = prompt('Edit word:', currentWord);
+
     if (newWord) {
-        wordBank.splice(index, 1);
+        const trimmedWord = newWord.trim().toUpperCase();
+        if (trimmedWord === '') {
+            alert('Word cannot be empty!');
+            return;
+        }
+        if (wordBank.includes(trimmedWord)) {
+            alert('This word already exists in the word bank!');
+            return;
+        }
+        if (!/^[A-Z]+$/.test(trimmedWord)) {
+            alert('Words must only contain uppercase letters A-Z!');
+            return;
+        }
+
+        wordBank[index] = trimmedWord;
+
         saveWordBank();
         displayWordBank();
     }
 }
 
+
 function deleteWord(index) {
     if (confirm('Are you sure you want to delete this word?')) {
+        wordBank.splice(index, 1);
         saveWordBank();
         displayWordBank();
     }
+
+    const confirmDelete = confirm("Are you sure you want to delete this word?");
+    if (!confirmDelete) return;
+
+    // ✅ Remove the word
+    wordBank.splice(index, 1);
+
+    // ✅ Save updated word bank
+    saveWordBank();
+
+    // ✅ Refresh display
+    displayWordBank();
 }
+
 
 function generateKeyboard() {
     const keyboard = document.getElementById('keyboard');
@@ -136,8 +210,19 @@ function startGame() {
     const p1Name = document.getElementById('player1Name').value.trim();
     const p2Name = document.getElementById('player2Name').value.trim();
     
-    gameState.player1.name = p1Name || 'Player 1';
-    gameState.player2.name = p2Name || 'Player 2';
+    // Validate player names (REQ-PS-01)
+    if (!p1Name || !p2Name) {
+        alert('Both player names are required. Please enter names for both players.');
+        return;
+    }
+    
+    if (p1Name === p2Name) {
+        alert('Player names must be different. Please choose different names.');
+        return;
+    }
+    
+    gameState.player1.name = p1Name;
+    gameState.player2.name = p2Name;
     
     document.getElementById('player1Display').textContent = gameState.player1.name;
     document.getElementById('player2Display').textContent = gameState.player2.name;
@@ -219,18 +304,17 @@ function updateWrongLetters() {
 }
 
 function updateLives() {
-    const livesLeft = gameState.maxWrong - gameState.wrongGuesses + 1;
+    const livesLeft = gameState.maxWrong - gameState.wrongGuesses;
     document.getElementById('livesLeft').textContent = livesLeft;
 }
 
 function updateHangman() {
     const parts = ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'];
     
-    const wrongOrder = ['head', 'leftArm', 'rightArm', 'body', 'leftLeg', 'rightLeg'];
     const partIndex = gameState.wrongGuesses - 1;
     
-    if (partIndex >= 0 && partIndex < wrongOrder.length) {
-        const partToShow = wrongOrder[partIndex];
+    if (partIndex >= 0 && partIndex < parts.length) {
+        const partToShow = parts[partIndex];
         document.getElementById(partToShow).style.display = 'block';
     }
 }
@@ -300,6 +384,9 @@ function gameWon() {
     
     statusMsg.textContent = `🎉 ${winnerName} won! The word was: ${gameState.currentWord}`;
     statusDiv.classList.add('show', 'winner');
+    
+    // Switch player turn after win (REQ-WL-01)
+    gameState.currentPlayer = gameState.currentPlayer === 1 ? 2 : 1;
 }
 
 function gameLost() {
