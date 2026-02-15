@@ -133,15 +133,23 @@ function generateKeyboard() {
 }
 
 function startGame() {
-    const p1Name = document.getElementById('player1Name').value.trim();
-    const p2Name = document.getElementById('player2Name').value.trim();
-    
-    gameState.player1.name = p1Name || 'Player 1';
-    gameState.player2.name = p2Name || 'Player 2';
-    
+    let p1Name = document.getElementById('player1Name').value.trim();
+    let p2Name = document.getElementById('player2Name').value.trim();
+
+    // Prevent empty or duplicate names
+    if (!p1Name) p1Name = 'Player 1';
+    if (!p2Name) p2Name = 'Player 2';
+    if (p1Name.toUpperCase() === p2Name.toUpperCase()) {
+        alert('Please enter different names for Player 1 and Player 2.');
+        return;  // Stop game start until fixed
+    }
+
+    gameState.player1.name = p1Name;
+    gameState.player2.name = p2Name;
+
     document.getElementById('player1Display').textContent = gameState.player1.name;
     document.getElementById('player2Display').textContent = gameState.player2.name;
-    
+
     document.getElementById('gameArea').style.display = 'block';
     
     nextRound();
@@ -171,6 +179,7 @@ function nextRound() {
 }
 
 function guessLetter(letter) {
+    letter = letter.toUpperCase();  // Add this line
     if (!gameState.gameActive) return;
     
     if (gameState.guessedLetters.includes(letter)) {
@@ -179,7 +188,7 @@ function guessLetter(letter) {
     
     gameState.guessedLetters.push(letter);
     
-    if (!gameState.currentWord.includes(letter)) {
+    if (!gameState.currentWord.toUpperCase().includes(letter)) {  // Ensure comparison is uppercase
         gameState.wrongGuesses++;
         updateHangman();
     }
@@ -218,19 +227,19 @@ function updateWrongLetters() {
     }
 }
 
+//test
+
 function updateLives() {
-    const livesLeft = gameState.maxWrong - gameState.wrongGuesses + 1;
+    const livesLeft = gameState.maxWrong - gameState.wrongGuesses;
     document.getElementById('livesLeft').textContent = livesLeft;
 }
 
 function updateHangman() {
     const parts = ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'];
-    
-    const wrongOrder = ['head', 'leftArm', 'rightArm', 'body', 'leftLeg', 'rightLeg'];
     const partIndex = gameState.wrongGuesses - 1;
-    
-    if (partIndex >= 0 && partIndex < wrongOrder.length) {
-        const partToShow = wrongOrder[partIndex];
+
+    if (partIndex >= 0 && partIndex < parts.length) {
+        const partToShow = parts[partIndex];
         document.getElementById(partToShow).style.display = 'block';
     }
 }
