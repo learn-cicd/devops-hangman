@@ -45,8 +45,18 @@ function switchTab(tabName) {
     event.target.classList.add('active');
 }
 
+// function loadWordBank() {
+//     const stored = localStorage.getItem('wordBank');
+//     if (stored) {
+//         wordBank = JSON.parse(stored);
+//     } else {
+//         wordBank = [...defaultWords];
+//         saveWordBank();
+//     }
+//     displayWordBank();
+// }
 function loadWordBank() {
-    const stored = localStorage.getItem('wordBank');
+    const stored = localStorage.getItem('devopsWords');
     if (stored) {
         wordBank = JSON.parse(stored);
     } else {
@@ -56,9 +66,14 @@ function loadWordBank() {
     displayWordBank();
 }
 
+
+// function saveWordBank() {
+//     localStorage.setItem('devopsWords', JSON.stringify(wordBank));
+// }
 function saveWordBank() {
     localStorage.setItem('devopsWords', JSON.stringify(wordBank));
 }
+
 
 function displayWordBank() {
     const wordList = document.getElementById('wordList');
