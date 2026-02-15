@@ -101,18 +101,19 @@ function addWord() {
     const input = document.getElementById('newWord');
     const word = input.value.trim().toUpperCase();
 
-    // Reject empty input
-    if (!word) {
-        alert('⚠️ Cannot add an empty word!');
+    // ignore empty input
+    if (word === '') {
+        alert('Please enter a word before adding.');
         return;
     }
 
-    // Reject duplicate words
+    // check for duplicates
     if (wordBank.includes(word)) {
-        alert('⚠️ Word already exists in the bank!');
+        alert('This word already exists in the bank!');
         return;
     }
 
+    // add the word
     wordBank.push(word);
     input.value = '';
     saveWordBank();
