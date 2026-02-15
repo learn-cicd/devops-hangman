@@ -95,6 +95,22 @@ function addWord() {
     const input = document.getElementById('newWord');
     const word = input.value.trim().toUpperCase();
 
+    if (!word) {
+        alert("Word cannot be empty.");
+        return;
+    }
+
+    const lettersOnly = /^[A-Z]+$/;
+    if (!lettersOnly.test(word)) {
+        alert("Word must contain only letters A-Z.");
+        return;
+    }
+
+    if (wordBank.includes(word)) {
+        alert("Word already exists.");
+        return;
+    }
+
     wordBank.push(word);
     input.value = '';
     saveWordBank();
