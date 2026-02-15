@@ -1,9 +1,166 @@
-* {
+/* Default Light Theme */
+body {
+    background-color: #ffffff;
+    color: #000000;
+    font-family: Arial, sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin: 5px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* Dark Theme */
+body.dark-theme {
+    background-color: #333;
+    color: #ffffff;
+}
+
+/* Dark Theme Button Styles */
+body.dark-theme button {
+    background-color: #555;
+    color: #fff;
+}
+
+body.dark-theme button:hover {
+    background-color: #666;
+}
+
+/* Example of Styling the Theme Toggle Icon */
+.theme-icon {
+    font-size: 30px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+body.dark-theme .theme-icon {
+    color: #fff;
+}
+
+/* Style for Game Area */
+#gameArea {
+    display: none;
+    padding: 20px;
+    border: 1px solid #ccc;
+    margin-top: 20px;
+}
+
+#gameArea.active {
+    display: block;
+}
+
+#wordDisplay {
+    font-size: 32px;
+    letter-spacing: 5px;
+}
+
+#wrongLetters {
+    margin-top: 10px;
+}
+
+/* Game Status */
+.game-status {
+    font-size: 20px;
+    margin-top: 20px;
+}
+
+.game-status.winner {
+    color: green;
+}
+
+.game-status.loser {
+    color: red;
+}
+
+/* Word Bank Styles */
+#wordList {
+    margin-top: 20px;
+}
+
+.word-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+    margin: 5px 0;
+    background-color: #f4f4f4;
+    border-radius: 5px;
+}
+
+.word-item .actions button {
+    margin-left: 5px;
+}
+
+.empty-state {
+    text-align: center;
+    font-size: 18px;
+    color: #999;
+}
+
+/* Add some padding and margins to make the layout more user-friendly */
+#wordCount, #gameStatus, #player1Display, #player2Display {
+    font-size: 18px;
+    margin-top: 10px;
+}
+
+/* Keyboard Styles */
+#keyboard {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.key {
+    width: 40px;
+    height: 40px;
+    margin: 5px;
+    font-size: 18px;
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.key:disabled {
+    background-color: #dcdcdc;
+    cursor: not-allowed;
+}
+
+.key:hover {
+    background-color: #ddd;
+}
+
+/* Score and Player Info */
+#player1Score, #player2Score {
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+#player1Score.active, #player2Score.active {
+    color: green;
+}
+
+{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* Gradient for Light Theme (Can be kept or removed based on your preferences) */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -253,7 +410,7 @@ body {
     background: #ccc;
     cursor: not-allowed;
     opacity: 0.5;
-}
+
 
 /* Game Status */
 .game-status {
@@ -439,91 +596,4 @@ body {
         font-size: 32px;
     }
 }
-
-/* Dark Mode */
-body.dark-mode {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-}
-
-body.dark-mode .container {
-    background: #0f3460;
-    color: #e0e0e0;
-}
-
-body.dark-mode .header {
-    background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
-}
-
-body.dark-mode .tab {
-    color: #999;
-    background: #1a1a2e;
-}
-
-body.dark-mode .tab.active {
-    background: #0f3460;
-    color: #00d9ff;
-    border-bottom: 3px solid #00d9ff;
-}
-
-body.dark-mode .player-setup {
-    background: #16213e;
-}
-
-body.dark-mode .player-setup h2 {
-    color: #e0e0e0;
-}
-
-body.dark-mode .player-input input {
-    background: #1a1a2e;
-    border: 2px solid #00d9ff;
-    color: #e0e0e0;
-}
-
-body.dark-mode .hangman-svg {
-    background: #1a1a2e;
-    border: 3px solid #00d9ff;
-}
-
-body.dark-mode .word-display {
-    color: #00d9ff;
-}
-
-body.dark-mode .wrong-letters {
-    background: #1a1a2e;
-    border: 2px solid #e74c3c;
-}
-
-body.dark-mode .wrong-letters h4 {
-    color: #e74c3c;
-}
-
-body.dark-mode .wrong-letters .letters {
-    color: #e74c3c;
-}
-
-body.dark-mode .word-list {
-    background: #16213e;
-}
-
-body.dark-mode .word-item {
-    background: #1a1a2e;
-    border: 2px solid #00d9ff;
-}
-
-body.dark-mode .word-item .word {
-    color: #e0e0e0;
-}
-
-body.dark-mode .word-bank-header h2 {
-    color: #e0e0e0;
-}
-
-body.dark-mode .add-word-form input {
-    background: #1a1a2e;
-    border: 2px solid #00d9ff;
-    color: #e0e0e0;
-}
-
-body.dark-mode .empty-state {
-    color: #999;
 }
