@@ -57,7 +57,7 @@ function loadWordBank() {
 }
 
 function saveWordBank() {
-    localStorage.setItem('devopsWords', JSON.stringify(wordBank));
+    localStorage.setItem('wordBank', JSON.stringify(wordBank));
 }
 
 function displayWordBank() {
@@ -95,6 +95,22 @@ function addWord() {
     const input = document.getElementById('newWord');
     const word = input.value.trim().toUpperCase();
 
+    if (!word) {
+        alert("Word cannot be empty.");
+        return;
+    }
+
+    const lettersOnly = /^[A-Z]+$/;
+    if (!lettersOnly.test(word)) {
+        alert("Word must contain only letters A-Z.");
+        return;
+    }
+
+    if (wordBank.includes(word)) {
+        alert("Word already exists.");
+        return;
+    }
+
     wordBank.push(word);
     input.value = '';
     saveWordBank();
@@ -102,16 +118,36 @@ function addWord() {
 }
 
 function editWord(index) {
-    const newWord = prompt('Edit word:', wordBank[index]);
-    if (newWord) {
-        wordBank.splice(index, 1);
-        saveWordBank();
-        displayWordBank();
+    const current = wordBank[index];
+    const input = prompt('Edit word:', current);
+    if (input === null) return;
+
+    const newWord = input.trim().toUpperCase();
+
+    if (!newWord) {
+        alert("Word cannot be empty.");
+        return;
     }
+
+    const lettersOnly = /^[A-Z]+$/;
+    if (!lettersOnly.test(newWord)) {
+        alert("Word must contain only letters A-Z.");
+        return;
+    }
+
+    if (newWord !== current && wordBank.includes(newWord)) {
+        alert("Word already exists.");
+        return;
+    }
+
+    wordBank[index] = newWord;
+    saveWordBank();
+    displayWordBank();
 }
 
 function deleteWord(index) {
     if (confirm('Are you sure you want to delete this word?')) {
+        wordBank.splice(index, 1);
         saveWordBank();
         displayWordBank();
     }
