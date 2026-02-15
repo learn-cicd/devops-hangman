@@ -101,9 +101,15 @@ function addWord() {
     const input = document.getElementById('newWord');
     const word = input.value.trim().toUpperCase();
 
-    // ignore empty input
-    if (word === '') {
-        alert('Please enter a word before adding.');
+    // Reject empty input
+    if (!word) {
+        alert('⚠️ Cannot add an empty word!');
+        return;
+    }
+
+    // Reject duplicate words
+    if (wordBank.includes(word)) {
+        alert('⚠️ Word already exists in the bank!');
         return;
     }
 
@@ -112,6 +118,7 @@ function addWord() {
     saveWordBank();
     displayWordBank();
 }
+
 function editWord(index) {
     const newWord = prompt('Edit word:', wordBank[index]);
     if (newWord) {
