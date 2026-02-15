@@ -103,11 +103,18 @@ function addWord() {
 
 function editWord(index) {
     const newWord = prompt('Edit word:', wordBank[index]);
-    if (newWord) {
-        wordBank.splice(index, 1);
-        saveWordBank();
-        displayWordBank();
-    }
+    if (!newWord) return;
+
+    const word = newWord.trim().toUpperCase();
+
+    // Reject empty, duplicates, or invalid characters
+    if (!word || wordBank.includes(word) || /[^A-Z]/.test(word)) return;
+
+    // Replace original word
+    wordBank[index] = word;
+
+    saveWordBank();
+    displayWordBank();
 }
 
 function deleteWord(index) {
