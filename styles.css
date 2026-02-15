@@ -527,3 +527,25 @@ body.dark-mode .add-word-form input {
 body.dark-mode .empty-state {
     color: #999;
 }
+body.dark {
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+body.dark .container,
+body.dark .tab-content,
+body.dark .card,
+body.dark .game-container,
+body.dark .word-bank-container {
+  background: #111827;
+  color: #e2e8f0;
+}
+
+body.dark button,
+body.dark input,
+body.dark textarea,
+body.dark select {
+  background: #1f2937;
+  color: #e2e8f0;
+  border-color: #374151;
+}

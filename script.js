@@ -20,19 +20,28 @@ let gameState = {
 let wordBank = [];
 
 document.addEventListener('DOMContentLoaded', function() {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark');
+        const themeIcon = document.querySelector('.theme-icon');
+        if (themeIcon) themeIcon.textContent = '☀️';
+    }
+
     loadWordBank();
     generateKeyboard();
 });
 
 function toggleTheme() {
+    document.body.classList.toggle('dark');
+
     const themeIcon = document.querySelector('.theme-icon');
-    
-    if (themeIcon.textContent === '🌙') {
-        themeIcon.textContent = '☀️';
-    } else {
-        themeIcon.textContent = '🌙';
+    if (themeIcon) {
+        themeIcon.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
     }
+
+    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
 }
+
 
 function switchTab(tabName) {
     const tabs = document.querySelectorAll('.tab-content');
@@ -135,6 +144,12 @@ function generateKeyboard() {
 function startGame() {
     const p1Name = document.getElementById('player1Name').value.trim();
     const p2Name = document.getElementById('player2Name').value.trim();
+
+    // ✅ Fix Issue #1: Prevent starting the game if BOTH names are empty
+    if (!p1Name && !p2Name) {
+        alert("Player name is required. Please enter at least one player name.");
+        return;
+    }
     
     gameState.player1.name = p1Name || 'Player 1';
     gameState.player2.name = p2Name || 'Player 2';
