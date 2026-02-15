@@ -120,14 +120,26 @@ function addWord() {
 }
 
 function editWord(index) {
-    const newWord = prompt('Edit word:', wordBank[index]);
-    if (newWord) {
-        wordBank.splice(index, 1);
-        saveWordBank();
-        displayWordBank();
-    }
-}
+    const currentWord = wordBank[index];
+    const newWord = prompt('Edit word:', currentWord);
 
+    if (!newWord) {
+        alert('⚠️ You must enter a word.');
+        return;
+    }
+
+    const formattedWord = newWord.trim().toUpperCase();
+
+    if (wordBank.includes(formattedWord) && formattedWord !== currentWord) {
+        alert('⚠️ This word already exists in the bank!');
+        return;
+    }
+
+    // update the word
+    wordBank[index] = formattedWord;
+    saveWordBank();
+    displayWordBank();
+}
 function deleteWord(index) {
     if (confirm('Are you sure you want to delete this word?')) {
         saveWordBank();
