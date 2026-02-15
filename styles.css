@@ -277,21 +277,21 @@ body {
 }
 
 .game-status.winner {
-    background: #f8d7da;
-    border: 2px solid #f5c6cb;
-}
-
-.game-status.winner h3 {
-    color: #721c24;
-}
-
-.game-status.loser {
     background: #d4edda;
     border: 2px solid #c3e6cb;
 }
 
-.game-status.loser h3 {
+.game-status.winner h3 {
     color: #155724;
+}
+
+.game-status.loser {
+    background: #f8d7da;
+    border: 2px solid #f5c6cb;
+}
+
+.game-status.loser h3 {
+    color: #721c24;
 }
 
 /* Buttons */
