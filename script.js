@@ -101,21 +101,56 @@ function addWord() {
     const input = document.getElementById('newWord');
     const word = input.value.trim().toUpperCase();
 
-    // ignore empty input
+    // Validate: must be non-empty and contain only letters A-Z
     if (word === '') {
-        alert('Please enter a word before adding.');
+        alert('Please enter a word.');
         return;
     }
 
-    // check for duplicates
+    if (!/^[A-Z]+$/.test(word)) {
+        alert('Word can only contain letters A-Z. No spaces or special characters allowed.');
+        return;
+    }
+
+    // Prevent duplicates
     if (wordBank.includes(word)) {
         alert('This word already exists in the bank!');
         return;
     }
 
-    // add the word
     wordBank.push(word);
     input.value = '';
+    saveWordBank();
+    displayWordBank();
+}
+
+function editWord(index) {
+    const currentWord = wordBank[index];
+    const newWord = prompt('Edit word:', currentWord);
+
+    if (!newWord) return; // Cancel pressed
+
+    const formattedWord = newWord.trim().toUpperCase();
+
+    // Validate: non-empty and only letters
+    if (formattedWord === '') {
+        alert('Word cannot be empty.');
+        return;
+    }
+
+    if (!/^[A-Z]+$/.test(formattedWord)) {
+        alert('Word can only contain letters A-Z. No spaces or special characters allowed.');
+        return;
+    }
+
+    // Prevent duplicates (except itself)
+    if (wordBank.includes(formattedWord) && formattedWord !== currentWord) {
+        alert('This word already exists in the bank!');
+        return;
+    }
+
+    // Update word
+    wordBank[index] = formattedWord;
     saveWordBank();
     displayWordBank();
 }
