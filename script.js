@@ -24,13 +24,18 @@ document.addEventListener('DOMContentLoaded', function() {
     generateKeyboard();
 });
 
+// Theme toggle function to switch between light and dark mode
 function toggleTheme() {
     const themeIcon = document.querySelector('.theme-icon');
     
-    if (themeIcon.textContent === '🌙') {
-        themeIcon.textContent = '☀️';
+    // Toggle the 'dark-theme' class on the body element to switch themes
+    document.body.classList.toggle('dark-theme');
+
+    // Change the theme icon to reflect the current theme
+    if (document.body.classList.contains('dark-theme')) {
+        themeIcon.textContent = '☀️';  // Sun icon for light theme
     } else {
-        themeIcon.textContent = '🌙';
+        themeIcon.textContent = '🌙';  // Moon icon for dark theme
     }
 }
 
@@ -57,7 +62,7 @@ function loadWordBank() {
 }
 
 function saveWordBank() {
-    localStorage.setItem('devopsWords', JSON.stringify(wordBank));
+    localStorage.setItem('wordBank', JSON.stringify(wordBank));
 }
 
 function displayWordBank() {
@@ -95,6 +100,12 @@ function addWord() {
     const input = document.getElementById('newWord');
     const word = input.value.trim().toUpperCase();
 
+    // Check for duplicate word before adding
+    if (wordBank.includes(word)) {
+        alert('This word is already in the word bank!');
+        return;
+    }
+
     wordBank.push(word);
     input.value = '';
     saveWordBank();
@@ -104,16 +115,17 @@ function addWord() {
 function editWord(index) {
     const newWord = prompt('Edit word:', wordBank[index]);
     if (newWord) {
-        wordBank.splice(index, 1);
-        saveWordBank();
-        displayWordBank();
+        wordBank[index] = newWord.toUpperCase(); // Update the word immediately in the array
+        saveWordBank();  // Update localStorage
+        displayWordBank(); // Refresh the word bank display
     }
 }
 
 function deleteWord(index) {
     if (confirm('Are you sure you want to delete this word?')) {
-        saveWordBank();
-        displayWordBank();
+        wordBank.splice(index, 1); // Remove the word from the array
+        saveWordBank();  // Update localStorage
+        displayWordBank();  // Refresh the display
     }
 }
 
@@ -174,6 +186,7 @@ function guessLetter(letter) {
     if (!gameState.gameActive) return;
     
     if (gameState.guessedLetters.includes(letter)) {
+        alert('You already guessed that letter!');
         return;
     }
     
