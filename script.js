@@ -131,21 +131,41 @@ function generateKeyboard() {
         keyboard.appendChild(button);
     }
 }
-
 function startGame() {
-    const p1Name = document.getElementById('player1Name').value.trim();
-    const p2Name = document.getElementById('player2Name').value.trim();
-    
-    gameState.player1.name = p1Name || 'Player 1';
-    gameState.player2.name = p2Name || 'Player 2';
-    
-    document.getElementById('player1Display').textContent = gameState.player1.name;
-    document.getElementById('player2Display').textContent = gameState.player2.name;
-    
+    const p1Input = document.getElementById('player1Name');
+    const p2Input = document.getElementById('player2Name');
+
+    const p1Name = p1Input.value.trim();
+    const p2Name = p2Input.value.trim();
+
+    const nameRegex = /^[A-Za-z]{2,}$/; // letters only, min 2 chars
+
+    // Validate Player 1
+    if (!nameRegex.test(p1Name)) {
+        alert('Player 1 name must contain only letters and be at least 2 characters long.');
+        p1Input.focus();
+        return;
+    }
+
+    // Validate Player 2
+    if (!nameRegex.test(p2Name)) {
+        alert('Player 2 name must contain only letters and be at least 2 characters long.');
+        p2Input.focus();
+        return;
+    }
+
+    // If valid, set names
+    gameState.player1.name = p1Name;
+    gameState.player2.name = p2Name;
+
+    document.getElementById('player1Display').textContent = p1Name;
+    document.getElementById('player2Display').textContent = p2Name;
+
     document.getElementById('gameArea').style.display = 'block';
-    
+
     nextRound();
 }
+
 
 function nextRound() {
     if (wordBank.length === 0) {
