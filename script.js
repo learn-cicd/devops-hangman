@@ -25,15 +25,19 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function toggleTheme() {
+    const body = document.body;
     const themeIcon = document.querySelector('.theme-icon');
-    
-    if (themeIcon.textContent === '🌙') {
-        themeIcon.textContent = '☀️';
+
+    // toggle dark mode class
+    body.classList.toggle('dark-mode');
+
+    // change icon
+    if (body.classList.contains('dark-mode')) {
+        themeIcon.textContent = '☀️'; // sun icon for light mode
     } else {
-        themeIcon.textContent = '🌙';
+        themeIcon.textContent = '🌙'; // moon icon for dark mode
     }
 }
-
 function switchTab(tabName) {
     const tabs = document.querySelectorAll('.tab-content');
     tabs.forEach(tab => tab.classList.remove('active'));
@@ -57,9 +61,11 @@ function loadWordBank() {
 }
 
 function saveWordBank() {
-    localStorage.setItem('devopsWords', JSON.stringify(wordBank));
-}
+    // save fix
 
+
+    localStorage.setItem('wordBank', JSON.stringify(wordBank));
+}
 function displayWordBank() {
     const wordList = document.getElementById('wordList');
     const wordCount = document.getElementById('wordCount');
@@ -95,6 +101,23 @@ function addWord() {
     const input = document.getElementById('newWord');
     const word = input.value.trim().toUpperCase();
 
+    // Validate: must be non-empty and contain only letters A-Z
+    if (word === '') {
+        alert('Please enter a word.');
+        return;
+    }
+
+    if (!/^[A-Z]+$/.test(word)) {
+        alert('Word can only contain letters A-Z. No spaces or special characters allowed.');
+        return;
+    }
+
+    // Prevent duplicates
+    if (wordBank.includes(word)) {
+        alert('This word already exists in the bank!');
+        return;
+    }
+
     wordBank.push(word);
     input.value = '';
     saveWordBank();
@@ -102,14 +125,57 @@ function addWord() {
 }
 
 function editWord(index) {
-    const newWord = prompt('Edit word:', wordBank[index]);
-    if (newWord) {
-        wordBank.splice(index, 1);
-        saveWordBank();
-        displayWordBank();
+    const currentWord = wordBank[index];
+    const newWord = prompt('Edit word:', currentWord);
+
+    if (!newWord) return; // Cancel pressed
+
+    const formattedWord = newWord.trim().toUpperCase();
+
+    // Validate: non-empty and only letters
+    if (formattedWord === '') {
+        alert('Word cannot be empty.');
+        return;
     }
+
+    if (!/^[A-Z]+$/.test(formattedWord)) {
+        alert('Word can only contain letters A-Z. No spaces or special characters allowed.');
+        return;
+    }
+
+    // Prevent duplicates (except itself)
+    if (wordBank.includes(formattedWord) && formattedWord !== currentWord) {
+        alert('This word already exists in the bank!');
+        return;
+    }
+
+    // Update word
+    wordBank[index] = formattedWord;
+    saveWordBank();
+    displayWordBank();
 }
 
+function editWord(index) {
+    const currentWord = wordBank[index];
+    const newWord = prompt('Edit word:', currentWord);
+
+    if (!newWord) {
+        alert('⚠️ You must enter a word.');
+        return;
+    }
+
+    const formattedWord = newWord.trim().toUpperCase();
+
+    if (wordBank.includes(formattedWord) && formattedWord !== currentWord) {
+        alert('⚠️ This word already exists in the bank!');
+        return;
+    }
+
+    // update the word
+    wordBank[index] = formattedWord;
+    saveWordBank();
+    displayWordBank();
+}
 function deleteWord(index) {
     if (confirm('Are you sure you want to delete this word?')) {
         saveWordBank();
