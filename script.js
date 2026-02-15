@@ -25,15 +25,19 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function toggleTheme() {
+    const body = document.body;
     const themeIcon = document.querySelector('.theme-icon');
-    
-    if (themeIcon.textContent === '🌙') {
-        themeIcon.textContent = '☀️';
+
+    // toggle dark mode class
+    body.classList.toggle('dark-mode');
+
+    // change icon
+    if (body.classList.contains('dark-mode')) {
+        themeIcon.textContent = '☀️'; // sun icon for light mode
     } else {
-        themeIcon.textContent = '🌙';
+        themeIcon.textContent = '🌙'; // moon icon for dark mode
     }
 }
-
 function switchTab(tabName) {
     const tabs = document.querySelectorAll('.tab-content');
     tabs.forEach(tab => tab.classList.remove('active'));
@@ -57,9 +61,11 @@ function loadWordBank() {
 }
 
 function saveWordBank() {
-    localStorage.setItem('devopsWords', JSON.stringify(wordBank));
-}
+    // save fix
 
+
+    localStorage.setItem('wordBank', JSON.stringify(wordBank));
+}
 function displayWordBank() {
     const wordList = document.getElementById('wordList');
     const wordCount = document.getElementById('wordCount');
