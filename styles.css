@@ -527,3 +527,32 @@ body.dark-mode .add-word-form input {
 body.dark-mode .empty-state {
     color: #999;
 }
+
+/* Default light theme */
+body {
+    background-color: #fff;
+    color: #000;
+}
+
+/* Dark mode */
+body.dark-mode {
+    background-color: #121212;
+    color: #eee;
+}
+
+/* Optional: adjust buttons and other elements */
+body.dark-mode .word-item,
+body.dark-mode .key {
+    background-color: #1f1f1f;
+    color: #eee;
+    border: 4px solid #444;
+}
+
+body.dark-mode .tab-content {
+    background-color: #1a1a1a;
+}
+
+body.dark-mode .game-status.show {
+    background-color: #333;
+    color: #fff;
+}
