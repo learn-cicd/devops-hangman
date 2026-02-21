@@ -229,11 +229,11 @@ Use this checklist to verify the application meets all requirements:
 - [ ] Names display correctly in game
 
 ### Gameplay
-- [ ] Correct letters appear in word
-- [ ] Wrong letters appear in "Wrong Guesses"
+- [x] Correct letters appear in word
+- [x] Wrong letters appear in "Wrong Guesses"
 - [ ] Letter buttons disable after click
-- [ ] Lives counter accurate (starts at 6, decreases by 1)
-- [ ] Hangman parts appear in correct order
+- [x] Lives counter accurate (starts at 6, decreases by 1)
+- [x] Hangman parts appear in correct order
 - [ ] Same word doesn't repeat immediately
 
 ### Win/Loss
@@ -242,7 +242,7 @@ Use this checklist to verify the application meets all requirements:
 - [ ] Win message has success colors (green)
 - [ ] Loss message has error colors (red)
 - [ ] Players alternate turns properly
-- [ ] Correct player plays next round
+- [x] Correct player plays next round
 
 ### UI/UX
 - [ ] Tabs switch correctly
