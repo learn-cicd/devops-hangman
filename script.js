@@ -26,25 +26,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function toggleTheme() {
     const themeIcon = document.querySelector('.theme-icon');
-    
-    if (themeIcon.textContent === '🌙') {
-        themeIcon.textContent = '☀️';
-    } else {
-        themeIcon.textContent = '🌙';
-    }
+    themeIcon.textContent = themeIcon.textContent === '🌙' ? '☀️' : '🌙';
 }
 
 function switchTab(tabName) {
     const tabs = document.querySelectorAll('.tab-content');
     tabs.forEach(tab => tab.classList.remove('active'));
-    
+
     const tabButtons = document.querySelectorAll('.tab');
     tabButtons.forEach(btn => btn.classList.remove('active'));
-    
+
     document.getElementById(tabName).classList.add('active');
     event.target.classList.add('active');
 }
 
+// ----------------- WORD BANK -----------------
 function loadWordBank() {
     const stored = localStorage.getItem('wordBank');
     if (stored) {
@@ -57,15 +53,14 @@ function loadWordBank() {
 }
 
 function saveWordBank() {
-    localStorage.setItem('devopsWords', JSON.stringify(wordBank));
+    localStorage.setItem('wordBank', JSON.stringify(wordBank));
 }
 
 function displayWordBank() {
     const wordList = document.getElementById('wordList');
     const wordCount = document.getElementById('wordCount');
-    
     wordCount.textContent = wordBank.length;
-    
+
     if (wordBank.length === 0) {
         wordList.innerHTML = `
             <div class="empty-state">
@@ -75,7 +70,7 @@ function displayWordBank() {
         `;
         return;
     }
-    
+
     wordList.innerHTML = '';
     wordBank.forEach((word, index) => {
         const wordItem = document.createElement('div');
@@ -103,8 +98,8 @@ function addWord() {
 
 function editWord(index) {
     const newWord = prompt('Edit word:', wordBank[index]);
-    if (newWord) {
-        wordBank.splice(index, 1);
+    if (newWord && newWord.trim() !== '') {
+        wordBank[index] = newWord.trim().toUpperCase();
         saveWordBank();
         displayWordBank();
     }
@@ -112,15 +107,16 @@ function editWord(index) {
 
 function deleteWord(index) {
     if (confirm('Are you sure you want to delete this word?')) {
+        wordBank.splice(index, 1);
         saveWordBank();
         displayWordBank();
     }
 }
 
+// ----------------- GAME -----------------
 function generateKeyboard() {
     const keyboard = document.getElementById('keyboard');
     const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    
     keyboard.innerHTML = '';
     for (let letter of letters) {
         const button = document.createElement('button');
@@ -135,15 +131,25 @@ function generateKeyboard() {
 function startGame() {
     const p1Name = document.getElementById('player1Name').value.trim();
     const p2Name = document.getElementById('player2Name').value.trim();
-    
-    gameState.player1.name = p1Name || 'Player 1';
-    gameState.player2.name = p2Name || 'Player 2';
-    
+
+    // Validation
+    if (!p1Name || !p2Name) {
+        alert('Both player names are required.');
+        return; // Stop the game from starting
+    }
+    if (p1Name === p2Name) {
+        alert('Player names must be different.');
+        return; // Stop the game from starting
+    }
+
+    gameState.player1.name = p1Name;
+    gameState.player2.name = p2Name;
+
     document.getElementById('player1Display').textContent = gameState.player1.name;
     document.getElementById('player2Display').textContent = gameState.player2.name;
-    
+
     document.getElementById('gameArea').style.display = 'block';
-    
+
     nextRound();
 }
 
@@ -152,16 +158,18 @@ function nextRound() {
         alert('No words in the word bank! Add some words first.');
         return;
     }
-    
+
     gameState.guessedLetters = [];
     gameState.wrongGuesses = 0;
     gameState.gameActive = true;
-    
+
     const randomIndex = Math.floor(Math.random() * wordBank.length);
     gameState.currentWord = wordBank[randomIndex];
-    
-    document.getElementById('gameStatus').classList.remove('show');
-    document.getElementById('gameStatus').className = 'game-status';
+
+    const statusDiv = document.getElementById('gameStatus');
+    statusDiv.className = 'game-status';
+    statusDiv.classList.remove('show');
+
     resetHangman();
     resetKeyboard();
     updateWordDisplay();
@@ -171,38 +179,31 @@ function nextRound() {
 }
 
 function guessLetter(letter) {
-    if (!gameState.gameActive) return;
-    
-    if (gameState.guessedLetters.includes(letter)) {
-        return;
-    }
-    
+    if (!gameState.gameActive || gameState.guessedLetters.includes(letter)) return;
+
     gameState.guessedLetters.push(letter);
-    
+
+    // Disable guessed button
+    const button = document.getElementById('key-' + letter);
+    if (button) button.disabled = true;
+
     if (!gameState.currentWord.includes(letter)) {
         gameState.wrongGuesses++;
         updateHangman();
     }
-    
+
     updateWordDisplay();
     updateWrongLetters();
     updateLives();
     checkGameStatus();
 }
 
+// ----------------- GAME HELPERS -----------------
 function updateWordDisplay() {
     const display = document.getElementById('wordDisplay');
-    let displayText = '';
-    
-    for (let letter of gameState.currentWord) {
-        if (gameState.guessedLetters.includes(letter)) {
-            displayText += letter + ' ';
-        } else {
-            displayText += '_ ';
-        }
-    }
-    
-    display.textContent = displayText.trim();
+    display.textContent = [...gameState.currentWord]
+        .map(letter => (gameState.guessedLetters.includes(letter) ? letter : '_'))
+        .join(' ');
 }
 
 function updateWrongLetters() {
@@ -228,34 +229,27 @@ function updateHangman() {
     
     const wrongOrder = ['head', 'leftArm', 'rightArm', 'body', 'leftLeg', 'rightLeg'];
     const partIndex = gameState.wrongGuesses - 1;
-    
     if (partIndex >= 0 && partIndex < wrongOrder.length) {
-        const partToShow = wrongOrder[partIndex];
-        document.getElementById(partToShow).style.display = 'block';
+        document.getElementById(wrongOrder[partIndex]).style.display = 'block';
     }
 }
 
 function resetHangman() {
-    const parts = ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'];
-    parts.forEach(part => {
-        document.getElementById(part).style.display = 'none';
+    ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'].forEach(id => {
+        document.getElementById(id).style.display = 'none';
     });
 }
 
 function resetKeyboard() {
-    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    for (let letter of letters) {
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(letter => {
         const button = document.getElementById('key-' + letter);
-        if (button) {
-            button.disabled = false;
-        }
-    }
+        if (button) button.disabled = false;
+    });
 }
 
 function updateCurrentPlayer() {
     const player1Div = document.getElementById('player1Score');
     const player2Div = document.getElementById('player2Score');
-    
     if (gameState.currentPlayer === 1) {
         player1Div.classList.add('active');
         player2Div.classList.remove('active');
@@ -266,15 +260,10 @@ function updateCurrentPlayer() {
 }
 
 function checkGameStatus() {
-    const allLettersGuessed = [...gameState.currentWord].every(letter =>
-        gameState.guessedLetters.includes(letter)
-    );
-    
-    if (allLettersGuessed) {
+    if ([...gameState.currentWord].every(l => gameState.guessedLetters.includes(l))) {
         gameWon();
         return;
     }
-    
     if (gameState.wrongGuesses >= gameState.maxWrong) {
         gameLost();
         return;
@@ -283,36 +272,32 @@ function checkGameStatus() {
 
 function gameWon() {
     gameState.gameActive = false;
-    
+
+    // Award points to the correct player
     if (gameState.currentPlayer === 1) {
-        gameState.player2.score += 10;
-        document.getElementById('score2').textContent = gameState.player2.score;
-    } else {
         gameState.player1.score += 10;
         document.getElementById('score1').textContent = gameState.player1.score;
+    } else {
+        gameState.player2.score += 10;
+        document.getElementById('score2').textContent = gameState.player2.score;
     }
-    
+
+    const winnerName = gameState.currentPlayer === 1 ? gameState.player1.name : gameState.player2.name;
     const statusDiv = document.getElementById('gameStatus');
     const statusMsg = document.getElementById('statusMessage');
-    
-    const winnerName = gameState.currentPlayer === 1 ? 
-        gameState.player2.name : gameState.player1.name;
-    
     statusMsg.textContent = `🎉 ${winnerName} won! The word was: ${gameState.currentWord}`;
     statusDiv.classList.add('show', 'winner');
 }
 
 function gameLost() {
     gameState.gameActive = false;
-    
+
+    const currentPlayerName = gameState.currentPlayer === 1 ? gameState.player1.name : gameState.player2.name;
     const statusDiv = document.getElementById('gameStatus');
     const statusMsg = document.getElementById('statusMessage');
-    
-    const currentPlayerName = gameState.currentPlayer === 1 ? 
-        gameState.player1.name : gameState.player2.name;
-    
     statusMsg.textContent = `😢 ${currentPlayerName} lost! The word was: ${gameState.currentWord}`;
     statusDiv.classList.add('show', 'loser');
-    
+
+    // Switch player for next round
     gameState.currentPlayer = gameState.currentPlayer === 1 ? 2 : 1;
 }
