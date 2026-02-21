@@ -95,6 +95,11 @@ function addWord() {
     const input = document.getElementById('newWord');
     const word = input.value.trim().toUpperCase();
 
+    if (!/^[A-Z]+$/.test(word)) {
+        alert('Word must contain letters only (A-Z).');
+        return;
+      }
+      
     wordBank.push(word);
     input.value = '';
     saveWordBank();
@@ -103,6 +108,12 @@ function addWord() {
 
 function editWord(index) {
     const newWord = prompt('Edit word:', wordBank[index]);
+
+    if (!/^[A-Z]+$/.test(word)) {
+        alert('Word must contain letters only (A-Z).');
+        return;
+      }
+      
     if (newWord) {
         wordBank.splice(index, 1);
         saveWordBank();
@@ -178,6 +189,8 @@ function guessLetter(letter) {
     }
     
     gameState.guessedLetters.push(letter);
+    document.getElementById('key-' + letter).disabled = true;
+
     
     if (!gameState.currentWord.includes(letter)) {
         gameState.wrongGuesses++;
@@ -283,36 +296,56 @@ function checkGameStatus() {
 
 function gameWon() {
     gameState.gameActive = false;
+
     
+    const winnerName = gameState.currentPlayer === 1 ?
+        gameState.player1.name : gameState.player2.name;
+
+   
     if (gameState.currentPlayer === 1) {
-        gameState.player2.score += 10;
-        document.getElementById('score2').textContent = gameState.player2.score;
-    } else {
         gameState.player1.score += 10;
         document.getElementById('score1').textContent = gameState.player1.score;
+    } else {
+        gameState.player2.score += 10;
+        document.getElementById('score2').textContent = gameState.player2.score;
     }
-    
+
+   
     const statusDiv = document.getElementById('gameStatus');
     const statusMsg = document.getElementById('statusMessage');
-    
-    const winnerName = gameState.currentPlayer === 1 ? 
-        gameState.player2.name : gameState.player1.name;
-    
+
     statusMsg.textContent = `🎉 ${winnerName} won! The word was: ${gameState.currentWord}`;
     statusDiv.classList.add('show', 'winner');
+
+    
+    gameState.currentPlayer = gameState.currentPlayer === 1 ? 2 : 1;
+    updateCurrentPlayer();
 }
+
 
 function gameLost() {
     gameState.gameActive = false;
+
+ bugfix/gm-correct-letter-display
+  
+
     
+main
+    const loserName = gameState.currentPlayer === 1 ?
+        gameState.player1.name : gameState.player2.name;
+
     const statusDiv = document.getElementById('gameStatus');
     const statusMsg = document.getElementById('statusMessage');
-    
-    const currentPlayerName = gameState.currentPlayer === 1 ? 
-        gameState.player1.name : gameState.player2.name;
-    
-    statusMsg.textContent = `😢 ${currentPlayerName} lost! The word was: ${gameState.currentWord}`;
+
+    statusMsg.textContent = `😢 ${loserName} lost! The word was: ${gameState.currentWord}`;
     statusDiv.classList.add('show', 'loser');
+
+bugfix/gm-correct-letter-display
+  
+
     
+main
     gameState.currentPlayer = gameState.currentPlayer === 1 ? 2 : 1;
+    updateCurrentPlayer();
 }
+
